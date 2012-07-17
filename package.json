@@ -1,0 +1,35 @@
+{
+  "name": "routil-send",
+  "version": "0.0.1",
+  "description": "send data through response",
+  "keywords": [],
+  "author": "Raynos <raynos2@gmail.com>",
+  "repository": "git://github.com/Raynos/routil-send.git",
+  "main": "index",
+  "homepage": "https://github.com/Raynos/routil-send",
+  "contributors": [
+    {
+      "name": "Jake Verbaten"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Raynos/routil-send/issues",
+    "email": "raynos2@gmail.com"
+  },
+  "dependencies": {
+    "iterators": "~0.1.0"
+  },
+  "devDependencies": {
+    "tap": "0.2.5",
+    "test-server": "0.0.1"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Raynos/routil-send/raw/master/LICENSE"
+    }
+  ],
+  "scripts": {
+    "test": "make test"
+  }
+}
