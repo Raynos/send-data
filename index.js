@@ -2,32 +2,46 @@ var forEach = require("iterators").forEachSync
 
 module.exports = send
 
-send.sendJson = sendJson
-send.sendHtml = sendHtml
+send.json = sendJson
+send.html = sendHtml
 
-function sendJson(res, object, statusCode) {
-    send(res, JSON.stringify(object), statusCode, {
-        "content-type": "application/json"
-    })
+function sendJson(req, res, data) {
+    if (!data.statusCode && !data.headers) {
+        data = { data: data }
+    }
+
+    data.headers = data.headers || {}
+    data.data = JSON.stringify(data.data)
+    data.headers["content-type"] = "application/json"
+
+    send(req, res, data)
 }
 
-function sendHtml(res, data, statusCode) {
-    send(res, data, statusCode, {
-        "content-type": "text/html"
-    })
+function sendHtml(req, res, data) {
+    if (typeof data !== "object") {
+        data = { data: data }
+    }
+
+    data.headers = data.headers || {}
+    data.headers["content-type"] = "text/html"
+
+    send(req, res, data)
 }
 
-function send(res, data, statusCode, headers) {
-    if (typeof statusCode === "object") {
-        headers = statusCode
-        statusCode = null
+function send(req, res, data) {
+    var statusCode
+        , headers = {}
+
+    if (typeof data === "object") {
+        statusCode = data.statusCode
+        headers = data.headers || {}
+        data = data.data
     }
 
     if (!Buffer.isBuffer(data)) {
         data = new Buffer(data)
     }
 
-    headers = headers || {}
     headers["content-length"] = data.length
 
     res.statusCode = statusCode || res.statusCode || 200

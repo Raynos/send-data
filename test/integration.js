@@ -1,24 +1,41 @@
 var test = require("tap").test
     , send = require("..")
     , testServer = require("test-server")
-    , sendJson = send.sendJson
-    , sendHtml = send.sendHtml
+    , sendJson = send.json
+    , sendHtml = send.html
 
 testServer(handleRequest, startTest)
 
 function handleRequest(req, res) {
     if (req.url === "/send") {
-        send(res, "foo", 202, {
-            bar: "baz"
+        send(req, res, {
+            data: "foo"
+            , statusCode: 202
+            , headers: {
+                bar: "baz"
+            }
         })
     } else if (req.url === "/optional") {
-        send(res, "foo")
+        send(req, res, "foo")
     } else if (req.url === "/json") {
-        sendJson(res, {
+        sendJson(req, res, {
+            data: {
+                foo: "bar"
+            }
+            , statusCode: 201
+        })
+    } else if (req.url === "/json/optional") {
+        sendJson(req, res, {
             foo: "bar"
-        }, 201)
+        })
     } else if (req.url === "/html") {
-        sendHtml(res, "<div>foo</div>")
+        sendHtml(req, res, {
+            data: "<div>foo</div>"
+            , statusCode: 200
+            , headers: {}
+        })
+    } else if (req.url === "/html/optional") {
+        sendHtml(req, res, "<div>foo</div>")
     }
 }
 
@@ -48,7 +65,19 @@ function startTest(request, done) {
 
             t.equal(data.foo, "bar")
             t.equal(res.statusCode, 201)
-            t.equal(res.headers['content-type'], "application/json")
+            t.equal(res.headers["content-type"], "application/json")
+
+            t.end()
+        })
+    })
+
+    test("json-optional", function (t) {
+        request("/json/optional", function (err, res, body) {
+            var data = JSON.parse(body)
+
+            t.equal(data.foo, "bar")
+            t.equal(res.statusCode, 200)
+            t.equal(res.headers["content-type"], "application/json")
 
             t.end()
         })
@@ -56,6 +85,16 @@ function startTest(request, done) {
 
     test("html", function (t) {
         request("/html", function (err, res, body) {
+            t.equal(body, "<div>foo</div>")
+            t.equal(res.statusCode, 200)
+            t.equal(res.headers["content-type"], "text/html")
+
+            t.end()
+        })
+    })
+
+    test("html-optional", function (t) {
+        request("/html/optional", function (err, res, body) {
             t.equal(body, "<div>foo</div>")
             t.equal(res.statusCode, 200)
             t.equal(res.headers["content-type"], "text/html")
