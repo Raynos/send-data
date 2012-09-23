@@ -46,11 +46,11 @@ http.createServer(function handleRequest(req, res) {
 
 ## Installation
 
-`npm install routil-send`
+`npm install send-data`
 
 ## Tests
 
-`make test`
+`npm test`
 
 ## Contributors
 
@@ -58,5 +58,5 @@ http.createServer(function handleRequest(req, res) {
 
 ## MIT Licenced
 
-  [1]: https://secure.travis-ci.org/Raynos/routil-send.png
-  [2]: http://travis-ci.org/Raynos/routil-send
+  [1]: https://secure.travis-ci.org/Raynos/send-data.png
+  [2]: http://travis-ci.org/Raynos/send-data
