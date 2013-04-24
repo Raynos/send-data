@@ -6,14 +6,14 @@ send data through response
 
 ```
 var send = require("send-data")
-    , sendJson = send.json
-    , sendHtml = send.html
-    , http = require("http")
+var sendJson = require("send-data/json")
+var sendHtml = require("send-data/html")
+var http = require("http")
 
 http.createServer(function handleRequest(req, res) {
     if (req.url === "/send") {
         send(req, res, {
-            data: "foo"
+            body: "foo"
             , statusCode: 202
             , headers: {
                 bar: "baz"
@@ -23,7 +23,7 @@ http.createServer(function handleRequest(req, res) {
         send(req, res, "foo")
     } else if (req.url === "/json") {
         sendJson(req, res, {
-            data: {
+            body: {
                 foo: "bar"
             }
             , statusCode: 201
@@ -34,7 +34,7 @@ http.createServer(function handleRequest(req, res) {
         })
     } else if (req.url === "/html") {
         sendHtml(req, res, {
-            data: "<div>foo</div>"
+            body: "<div>foo</div>"
             , statusCode: 200
             , headers: {}
         })
