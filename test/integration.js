@@ -1,17 +1,17 @@
-var test = require("tap").test
-    , send = require("..")
-    , testServer = require("test-server")
-    , sendJson = send.json
-    , sendHtml = send.html
+var test = require("tape")
+var send = require("..")
+var testServer = require("test-server")
+var sendJson = require("../json")
+var sendHtml = require("../html")
 
 testServer(handleRequest, startTest)
 
 function handleRequest(req, res) {
     if (req.url === "/send") {
         send(req, res, {
-            data: "foo"
-            , statusCode: 202
-            , headers: {
+            body: "foo",
+            statusCode: 202,
+            headers: {
                 bar: "baz"
             }
         })
@@ -19,10 +19,10 @@ function handleRequest(req, res) {
         send(req, res, "foo")
     } else if (req.url === "/json") {
         sendJson(req, res, {
-            data: {
+            body: {
                 foo: "bar"
-            }
-            , statusCode: 201
+            },
+            statusCode: 201
         })
     } else if (req.url === "/json/optional") {
         sendJson(req, res, {
@@ -30,9 +30,9 @@ function handleRequest(req, res) {
         })
     } else if (req.url === "/html") {
         sendHtml(req, res, {
-            data: "<div>foo</div>"
-            , statusCode: 200
-            , headers: {}
+            body: "<div>foo</div>",
+            statusCode: 200,
+            headers: {}
         })
     } else if (req.url === "/html/optional") {
         sendHtml(req, res, "<div>foo</div>")

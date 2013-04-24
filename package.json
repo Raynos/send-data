@@ -17,11 +17,11 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "iterators": "~0.3.0"
   },
   "devDependencies": {
     "tap": "~0.3.1",
-    "test-server": "0.0.1"
+    "test-server": "~0.1.1",
+    "tape": "~0.3.3"
   },
   "licenses": [
     {
@@ -30,6 +30,6 @@
     }
   ],
   "scripts": {
-    "test": "tap --stderr ./test"
+    "test": "node ./test/integration.js"
   }
 }
