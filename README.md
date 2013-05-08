@@ -8,6 +8,7 @@ send data through response
 var send = require("send-data")
 var sendJson = require("send-data/json")
 var sendHtml = require("send-data/html")
+var sendError = require("send-data/error")
 var http = require("http")
 
 http.createServer(function handleRequest(req, res) {
@@ -40,6 +41,8 @@ http.createServer(function handleRequest(req, res) {
         })
     } else if (req.url === "/html/optional") {
         sendHtml(req, res, "<div>foo</div>")
+    } else if (req.url === "/oops") {
+        sendError(req, res, new Error("OOPS"))
     }
 }).listen(8080)
 ```
