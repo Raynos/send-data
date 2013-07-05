@@ -14,9 +14,9 @@ var http = require("http")
 http.createServer(function handleRequest(req, res) {
     if (req.url === "/send") {
         send(req, res, {
-            body: "foo"
-            , statusCode: 202
-            , headers: {
+            body: "foo",
+            statusCode: 202,
+            headers: {
                 bar: "baz"
             }
         })
@@ -26,8 +26,8 @@ http.createServer(function handleRequest(req, res) {
         sendJson(req, res, {
             body: {
                 foo: "bar"
-            }
-            , statusCode: 201
+            },
+            statusCode: 201
         })
     } else if (req.url === "/json/optional") {
         sendJson(req, res, {
@@ -35,9 +35,9 @@ http.createServer(function handleRequest(req, res) {
         })
     } else if (req.url === "/html") {
         sendHtml(req, res, {
-            body: "<div>foo</div>"
-            , statusCode: 200
-            , headers: {}
+            body: "<div>foo</div>",
+            statusCode: 200,
+            headers: {}
         })
     } else if (req.url === "/html/optional") {
         sendHtml(req, res, "<div>foo</div>")
