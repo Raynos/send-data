@@ -4,7 +4,7 @@ send data through response
 
 ## Example
 
-```
+```js
 var send = require("send-data")
 var sendJson = require("send-data/json")
 var sendHtml = require("send-data/html")
