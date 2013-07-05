@@ -19,7 +19,7 @@ function send(req, res, body) {
         body = body.body
     }
 
-    body = Buffer.isBuffer(body) ? body : new Buffer(body)
+    body = Buffer.isBuffer(body) ? body : new Buffer(body || "")
     headers = headers || {}
 
     headers["Content-Length"] = body.length
