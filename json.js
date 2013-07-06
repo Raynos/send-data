@@ -9,7 +9,7 @@ module.exports = sendJson
     })
 */
 function sendJson(req, res, value) {
-    if (!value.statusCode && !value.headers) {
+    if (!value || (!value.statusCode && !value.headers)) {
         value = { body: value }
     }
 
