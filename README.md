@@ -72,7 +72,7 @@ type ErrorObject := { attribute: String, message: String }
 type MaybeErrorObject := Array<ErrorObject> | String | Error
 
 send-data/error := (HttpRequest, HttpResponse, MaybeErrorObject | {
-    error: MaybeErrorObject,
+    body: MaybeErrorObject,
     statusCode?: Number,
     headers?: Object<String, String>
 })
