@@ -61,7 +61,6 @@ function startTest(request, done) {
 
     test("json", function (t) {
         request("/json", function (err, res, body) {
-            console.log("wut", res.statusCode)
             var data = JSON.parse(body)
 
             t.equal(data.foo, "bar")
