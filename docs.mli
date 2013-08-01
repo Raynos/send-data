@@ -9,7 +9,11 @@ type SendObject<T> := {
 send-data := (HttpRequest, HttpResponse,
     Buffer | String | SendObject<Buffer | String>)
 
-send-data/json := (HttpRequest, HttpResponse, Any | SendObject<Any>)
+send-data/json := (HttpRequest, HttpResponse, Any | SendObject<Any>, options?: {
+    pretty?: Boolean,
+    space?: String,
+    replace?: Function
+})
 
 send-data/html := (HttpRequest, HttpResponse, String | SendObject<String>)
 
