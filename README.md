@@ -47,37 +47,6 @@ http.createServer(function handleRequest(req, res) {
 }).listen(8080)
 ```
 
-## Docs
-
-```ocaml
-send-data := (HttpRequest, HttpResponse, Buffer | String | {
-    headers?: Object<String, String>,
-    body?: Buffer | String,
-    statusCode?: Number
-})
-
-send-data/json := (HttpRequest, HttpResponse, Value | {
-    body: Value,
-    headers?: Object<String, String>,
-    statusCode?: Number
-})
-
-send-data/html := (HttpRequest, HttpResponse, String | {
-    body: String,
-    headers?: Object<String, String>,
-    statusCode?: Number
-})
-
-type ErrorObject := { attribute: String, message: String }
-type MaybeErrorObject := Array<ErrorObject> | String | Error
-
-send-data/error := (HttpRequest, HttpResponse, MaybeErrorObject | {
-    error: MaybeErrorObject,
-    statusCode?: Number,
-    headers?: Object<String, String>
-})
-```
-
 ## Installation
 
 `npm install send-data`
