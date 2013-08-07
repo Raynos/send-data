@@ -1,10 +1,11 @@
 var send = require("./index")
+var isSendObject = require("./is-send-object")
 
 module.exports = sendJson
 
-function sendJson(req, res, value, opts) {
-    if (!value || (!value.statusCode && !value.headers)) {
-        value = { body: value }
+function sendJson(req, res, opts, callback) {
+    if (!isSendObject(opts)) {
+        opts = { body: opts }
     }
 
     opts = opts || {}
@@ -12,10 +13,10 @@ function sendJson(req, res, value, opts) {
         opts.space = "    "
     }
 
-    value.headers = value.headers || {}
-    value.body = JSON.stringify(value.body,
+    opts.headers = opts.headers || {}
+    opts.body = JSON.stringify(opts.body,
         opts.replacer || null, opts.space || "")
-    value.headers["Content-Type"] = "application/json"
+    opts.headers["Content-Type"] = "application/json"
 
-    send(req, res, value)
+    send(req, res, opts, callback)
 }
