@@ -3,19 +3,20 @@ type MaybeErrorObject := Array<ErrorObject> | String | Error
 type SendObject<T> := {
     headers?: Object<String, String>,
     body?: T,
-    statusCode?: Number
+    statusCode?: Number,
+    gzip?: Boolean
 }
+type SendValue<T> := T | SendObject<T>
 
-send-data := (HttpRequest, HttpResponse,
-    Buffer | String | SendObject<Buffer | String>)
+send-data := (HttpRequest, HttpResponse, SendValue<Buffer | String>, Callback)
 
-send-data/json := (HttpRequest, HttpResponse, Any | SendObject<Any>, options?: {
+send-data/json := (HttpRequest, HttpResponse, Any | (SendObject<Any> & {
     pretty?: Boolean,
     space?: String,
     replace?: Function
-})
+}), Callback)
 
-send-data/html := (HttpRequest, HttpResponse, String | SendObject<String>)
+send-data/html := (HttpRequest, HttpResponse, SendValue<String>, Callback)
 
 send-data/error := (HttpRequest, HttpResponse,
-    MaybeErrorObject | SendObject<MaybeErrorObject>)
+    SendValue<MaybeErrorObject>, Callback)
