@@ -2,13 +2,13 @@ var send = require("./index")
 
 module.exports = sendHtml
 
-function sendHtml(req, res, html) {
-    if (typeof html !== "object") {
-        html = { body: html }
+function sendHtml(req, res, opts, callback) {
+    if (typeof opts === "string") {
+        opts = { body: opts }
     }
 
-    html.headers = html.headers || {}
-    html.headers["Content-Type"] = "text/html"
+    opts.headers = opts.headers || {}
+    opts.headers["Content-Type"] = "text/html"
 
-    send(req, res, html)
+    send(req, res, opts, callback)
 }
