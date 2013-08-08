@@ -1,6 +1,7 @@
 var Buffer = require("buffer").Buffer
 var zlib = require("zlib")
 
+var CALLBACK_REQUIRED = "send(req, res, opts, callback). Callback is required"
 var isGzip = /\bgzip\b/
 
 module.exports = send
@@ -21,6 +22,10 @@ function send(req, res, opts, callback) {
     })
 
     if (gzip && acceptsGzip(req)) {
+        if (!callback) {
+            throw new Error(CALLBACK_REQUIRED)
+        }
+
         zlib.gzip(body, function (err, body) {
             if (err) {
                 return callback(err)
@@ -28,6 +33,7 @@ function send(req, res, opts, callback) {
 
             res.once("finish", callback)
 
+            res.setHeader("Content-Encoding", "gzip")
             res.setHeader("Content-Length", body.length)
             res.end(body)
         })
