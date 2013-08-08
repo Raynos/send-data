@@ -1,3 +1,8 @@
+# v3.0.4
+
+ - throw an exception if you had `{ gzip: true }` and no callback
+ - set the gzip header
+
 # v3.0.0
 
 Added gzip support and a callback interface
