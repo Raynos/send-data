@@ -1,3 +1,8 @@
+# v3.0.5
+
+ - update `send-data/error` to pass extra error objects through
+    down the wire.
+
 # v3.0.4
 
  - throw an exception if you had `{ gzip: true }` and no callback
