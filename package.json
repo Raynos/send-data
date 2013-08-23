@@ -19,7 +19,8 @@
   "dependencies": {},
   "devDependencies": {
     "test-server": "~0.1.1",
-    "tape": "~1.0.4"
+    "tape": "~1.0.4",
+    "tern": "git://github.com/marijnh/tern"
   },
   "licenses": [
     {

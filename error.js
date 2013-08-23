@@ -15,9 +15,11 @@ function sendError(req, res, opts, callback) {
     } else if (typeof error === "string") {
         opts.body = { errors: [{ message: error, attribute: "general" }] }
     } else if (error && typeof error.message === "string") {
-        opts.body = { errors: [
-            { message: error.message, attribute: "general" }
-        ] }
+        if (!error.attribute) {
+            error.attribute = "general"
+        }
+
+        opts.body = { errors: [error] }
     }
 
     sendJson(req, res, opts, callback)
