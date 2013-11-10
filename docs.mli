@@ -18,5 +18,7 @@ send-data/json := (HttpRequest, HttpResponse, Any | (SendObject<Any> & {
 
 send-data/html := (HttpRequest, HttpResponse, SendValue<String>, Callback)
 
+send-data/css := (HttpRequest, HttpResponse, SendValue<String>, Callback)
+
 send-data/error := (HttpRequest, HttpResponse,
     SendValue<MaybeErrorObject>, Callback)
