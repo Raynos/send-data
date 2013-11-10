@@ -1,8 +1,8 @@
 var send = require("./index")
 
-module.exports = sendJs
+module.exports = sendJavascript
 
-function sendJs(req, res, opts, callback) {
+function sendJavascript(req, res, opts, callback) {
     if (typeof opts === "string") {
         opts = { body: opts }
     }
