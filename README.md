@@ -2,6 +2,8 @@
 
 send data through response
 
+Originally taken from [npm-www](https://github.com/isaacs/npm-www)
+
 ## Example
 
 ```js
