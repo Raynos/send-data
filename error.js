@@ -39,6 +39,7 @@ function sendError(req, res, opts, callback) {
             typeof serializeError.domain.on === "function"
         ) {
             delete serializeError.domain
+            delete serializeError.domainThrown
         }
 
         opts.body = { errors: [serializeError] }
