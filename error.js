@@ -1,3 +1,4 @@
+var extend = require("xtend")
 var sendJson = require("./json")
 var isSendObject = require("./is-send-object.js")
 
@@ -32,7 +33,15 @@ function sendError(req, res, opts, callback) {
             error.attribute = "general"
         }
 
-        opts.body = { errors: [error] }
+        var serializeError = extend(error)
+
+        if (serializeError.domain && 
+            typeof serializeError.domain.on === "function"
+        ) {
+            delete serializeError.domain
+        }
+
+        opts.body = { errors: [serializeError] }
     }
 
     sendJson(req, res, opts, callback)
