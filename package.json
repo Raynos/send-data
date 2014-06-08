@@ -16,7 +16,9 @@
     "url": "https://github.com/Raynos/send-data/issues",
     "email": "raynos2@gmail.com"
   },
-  "dependencies": {},
+  "dependencies": {
+    "json-stringify-safe": "^5.0.0"
+  },
   "devDependencies": {
     "test-server": "~0.1.1",
     "tape": "~1.0.4",

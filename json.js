@@ -1,3 +1,5 @@
+var stringify = require("json-stringify-safe")
+
 var send = require("./index")
 var isSendObject = require("./is-send-object")
 
@@ -14,7 +16,7 @@ function sendJson(req, res, opts, callback) {
     }
 
     opts.headers = opts.headers || {}
-    opts.body = JSON.stringify(opts.body,
+    opts.body = stringify(opts.body,
         opts.replacer || null, opts.space || "")
     opts.headers["Content-Type"] = "application/json"
 
