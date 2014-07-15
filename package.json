@@ -17,7 +17,8 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "json-stringify-safe": "^5.0.0"
+    "json-stringify-safe": "^5.0.0",
+    "xtend": "^3.0.0"
   },
   "devDependencies": {
     "test-server": "~0.1.1",
