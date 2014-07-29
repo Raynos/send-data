@@ -3,6 +3,7 @@ var send = require("..")
 var testServer = require("test-server")
 var sendJson = require("../json")
 var sendHtml = require("../html")
+var sendPlain = require("../plain")
 
 testServer(handleRequest, startTest)
 
@@ -36,6 +37,14 @@ function handleRequest(req, res) {
         })
     } else if (req.url === "/html/optional") {
         sendHtml(req, res, "<div>foo</div>")
+    } else if (req.url === "/plain") {
+        sendPlain(req, res, {
+            body: "OK",
+            statusCode: 200,
+            headers: {}
+        })
+    } else if (req.url === "/plain/optional") {
+        sendPlain(req, res, "OK")
     }
 }
 
@@ -98,6 +107,26 @@ function startTest(request, done) {
             t.equal(body, "<div>foo</div>")
             t.equal(res.statusCode, 200)
             t.equal(res.headers["content-type"], "text/html")
+
+            t.end()
+        })
+    })
+
+    test("plain", function (t) {
+        request("/plain", function (err, res, body) {
+            t.equal(body, "OK")
+            t.equal(res.statusCode, 200)
+            t.equal(res.headers["content-type"], "text/plain; charset=utf-8")
+
+            t.end()
+        })
+    })
+
+    test("plain-optional", function (t) {
+        request("/plain/optional", function (err, res, body) {
+            t.equal(body, "OK")
+            t.equal(res.statusCode, 200)
+            t.equal(res.headers["content-type"], "text/plain; charset=utf-8")
 
             t.end()
         })
