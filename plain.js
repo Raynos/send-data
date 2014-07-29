@@ -8,7 +8,7 @@ function sendPlain(req, res, opts, callback) {
     }
 
     opts.headers = opts.headers || {}
-    opts.headers["Content-Type"] = "text/plain charset=utf-8"
+    opts.headers["Content-Type"] = "text/plain; charset=utf-8"
 
     send(req, res, opts, callback)
 }

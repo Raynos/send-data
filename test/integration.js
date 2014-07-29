@@ -116,7 +116,7 @@ function startTest(request, done) {
         request("/plain", function (err, res, body) {
             t.equal(body, "OK")
             t.equal(res.statusCode, 200)
-            t.equal(res.headers["content-type"], "text/plain charset=utf-8")
+            t.equal(res.headers["content-type"], "text/plain; charset=utf-8")
 
             t.end()
         })
@@ -126,7 +126,7 @@ function startTest(request, done) {
         request("/plain/optional", function (err, res, body) {
             t.equal(body, "OK")
             t.equal(res.statusCode, 200)
-            t.equal(res.headers["content-type"], "text/plain charset=utf-8")
+            t.equal(res.headers["content-type"], "text/plain; charset=utf-8")
 
             t.end()
         })
