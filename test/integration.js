@@ -29,6 +29,22 @@ function handleRequest(req, res) {
         sendJson(req, res, {
             foo: "bar"
         })
+    } else if (req.url === "/json/shared") {
+        var shared = { foo: "bar" }
+
+        sendJson(req, res, {
+            shared1: shared,
+            shared2: shared
+        })
+    } else if (req.url === "/json/circular") {
+        var circular = {}
+        circular.circular = circular
+
+        sendJson(req, res, circular, function (err) {
+            if (err) {
+                res.end(err.message)
+            }
+        })
     } else if (req.url === "/html") {
         sendHtml(req, res, {
             body: "<div>foo</div>",
@@ -127,6 +143,28 @@ function startTest(request, done) {
             t.equal(body, "OK")
             t.equal(res.statusCode, 200)
             t.equal(res.headers["content-type"], "text/plain; charset=utf-8")
+
+            t.end()
+        })
+    })
+
+    test("shared-json", function (t) {
+        request("/json/shared", function (err, res, body) {
+            var data = JSON.parse(body)
+
+            t.equal(res.statusCode, 200)
+            t.equal(data.shared1.foo, "bar")
+            t.equal(data.shared2.foo, "bar")
+
+            t.end()
+        })
+    })
+
+    test("circular-json", function (t) {
+        request("/json/circular", function (err, res, body) {
+
+            t.equal(res.statusCode, 200)
+            t.equal(res.body, "Converting circular structure to JSON")
 
             t.end()
         })
