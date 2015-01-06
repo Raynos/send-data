@@ -3,7 +3,7 @@ var send = require("./index")
 module.exports = sendPlain
 
 function sendPlain(req, res, opts, callback) {
-    if (typeof opts === "string") {
+    if (typeof opts === "string" || Buffer.isBuffer(opts)) {
         opts = { body: opts }
     }
 
