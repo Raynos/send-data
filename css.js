@@ -3,7 +3,7 @@ var send = require("./index")
 module.exports = sendCss
 
 function sendCss(req, res, opts, callback) {
-    if (typeof opts === "string") {
+    if (typeof opts === "string" || Buffer.isBuffer(opts)) {
         opts = { body: opts }
     }
 
