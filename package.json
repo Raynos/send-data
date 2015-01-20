@@ -21,9 +21,13 @@
     "xtend": "^3.0.0"
   },
   "devDependencies": {
-    "test-server": "~0.1.1",
-    "tape": "~1.0.4",
-    "tern": "git://github.com/marijnh/tern"
+    "hammock": "^0.1.10",
+    "hammock-request": "^2.1.0",
+    "istanbul": "^0.3.5",
+    "opn": "^1.0.1",
+    "tape": "^3.4.0",
+    "tern": "git://github.com/marijnh/tern",
+    "test-server": "~0.1.1"
   },
   "licenses": [
     {
@@ -32,6 +36,8 @@
     }
   ],
   "scripts": {
-    "test": "node ./test/integration.js"
+    "test": "node ./test/index.js",
+    "cover": "istanbul cover --print detail --report html -- test/index.js",
+    "view-cover": "opn coverage/index.html"
   }
 }
