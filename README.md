@@ -44,7 +44,7 @@ http.createServer(function handleRequest(req, res) {
     } else if (req.url === "/html/optional") {
         sendHtml(req, res, "<div>foo</div>")
     } else if (req.url === "/oops") {
-        sendError(req, res, new Error("OOPS"))
+        sendError(req, res, { body: new Error("OOPS") })
     }
 }).listen(8080)
 ```
