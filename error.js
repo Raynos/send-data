@@ -1,56 +1,79 @@
-var extend = require("xtend")
-var sendJson = require("./json")
-var isSendObject = require("./is-send-object.js")
+'use strict';
 
-module.exports = sendError
+var url = require('url');
+var STATUS_CODES = require('http').STATUS_CODES;
+
+var sendJson = require('./json.js');
+
+module.exports = sendError;
 
 function sendError(req, res, opts, callback) {
-    if (!isSendObject(opts)) {
-        opts = { body: opts, statusCode: 500 }
+    var err = opts.body;
+    var logger = opts.logger;
+    var statsd = opts.statsd;
+
+    var errOpts = {
+        verbose: opts.verbose || false,
+        bodyStatusCode: opts.bodyStatusCode,
+        additionalParams: opts.additionalParams
+    };
+
+    var statsPrefix = opts.statsPrefix || 'clients.send-data';
+    var parsedUrl = url.parse(req.url);
+    var statsdKey = statsPrefix + '.error-handler.' +
+        parsedUrl.pathname;
+
+    var isExpected = err.expected ||
+        (err.statusCode >= 400 && err.statusCode <= 499);
+
+    if (!isExpected) {
+        if (logger) {
+            logger.error('unexpected error', err);
+        }
+        if (statsd) {
+            statsd.increment(statsdKey + '.unexpected');
+        }
+    } else if (statsd) {
+        statsd.increment(statsdKey + '.expected');
+    }
+    writeError(req, res, err, errOpts);
+}
+
+function writeError(req, res, err, opts) {
+    var statusCode = err.statusCode || 500;
+    var body = {
+        message: err.message || STATUS_CODES[statusCode] ||
+            STATUS_CODES[500]
+    };
+
+    if (typeof err.type === 'string') {
+        body.type = err.type;
     }
 
-    var error = opts.body
-
-    if (Array.isArray(error)) {
-        opts.body = { errors: error }
-    } else if (typeof error === "string") {
-        opts.body = { errors: [{ message: error, attribute: "general" }] }
-    } else if (error && typeof error.message === "string") {
-        Object.defineProperty(error, "message", {
-            value: error.message,
-            enumerable: true,
-            writable: true,
-            configurable: true
-        })
-        Object.defineProperty(error, "type", {
-            value: error.type,
-            enumerable: true,
-            writable: true,
-            configurable: true
-        })
-
-        if (!error.attribute) {
-            error.attribute = "general"
-        }
-
-        var serializeError = extend(error)
-
-        if (serializeError.domain && 
-            typeof serializeError.domain.on === "function"
-        ) {
-            delete serializeError.domain
-            delete serializeError.domainThrown
-        }
-
-        if (serializeError.domainEmitter &&
-            serializeError.domainEmitter.domain &&
-            typeof serializeError.domainEmitter.domain.on === "function"
-        ) {
-            delete serializeError.domainEmitter
-        }
-
-        opts.body = { errors: [serializeError] }
+    if (Array.isArray(err.messages)) {
+        body.messages = err.messages;
     }
 
-    sendJson(req, res, opts, callback)
+    // Toggle sending status code in the body
+    if (opts.bodyStatusCode !== false) {
+        body.statusCode = statusCode;
+    }
+
+    if (opts.verbose) {
+        body.stack = err.stack;
+        body.expected = err.expected;
+        body.debug = err.debug;
+    }
+
+    // Append additional params
+    if (opts.additionalParams) {
+        opts.additionalParams.forEach(function appendKey(k) {
+            body[k] = err[k];
+        });
+    }
+
+    sendJson(req, res, {
+        statusCode: statusCode,
+        body: body
+    });
 }
