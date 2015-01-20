@@ -1,6 +1,7 @@
 'use strict';
 
 var url = require('url');
+var assert = require('assert');
 var STATUS_CODES = require('http').STATUS_CODES;
 
 var sendJson = require('./json.js');
@@ -8,6 +9,8 @@ var sendJson = require('./json.js');
 module.exports = sendError;
 
 function sendError(req, res, opts, callback) {
+    assert(opts && opts.body, 'opts.body is required');
+
     var err = opts.body;
     var logger = opts.logger;
     var statsd = opts.statsd;
@@ -15,7 +18,8 @@ function sendError(req, res, opts, callback) {
     var errOpts = {
         verbose: opts.verbose || false,
         bodyStatusCode: opts.bodyStatusCode,
-        additionalParams: opts.additionalParams
+        additionalParams: opts.additionalParams,
+        err: err
     };
 
     var statsPrefix = opts.statsPrefix || 'clients.send-data';
@@ -36,10 +40,11 @@ function sendError(req, res, opts, callback) {
     } else if (statsd) {
         statsd.increment(statsdKey + '.expected');
     }
-    writeError(req, res, err, errOpts);
+    writeError(req, res, errOpts, callback);
 }
 
-function writeError(req, res, err, opts) {
+function writeError(req, res, opts, callback) {
+    var err = opts.err;
     var statusCode = err.statusCode || 500;
     var body = {
         message: err.message || STATUS_CODES[statusCode] ||
@@ -75,5 +80,5 @@ function writeError(req, res, err, opts) {
     sendJson(req, res, {
         statusCode: statusCode,
         body: body
-    });
+    }, callback);
 }
