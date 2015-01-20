@@ -14,9 +14,10 @@ function sendError(req, res, opts, callback) {
     var err = opts.body;
     var logger = opts.logger;
     var statsd = opts.statsd;
+    var verbose = opts.verbose;
 
     var errOpts = {
-        verbose: opts.verbose || false,
+        verbose: typeof verbose === 'boolean' ? verbose : true,
         bodyStatusCode: opts.bodyStatusCode,
         additionalParams: opts.additionalParams,
         err: err
