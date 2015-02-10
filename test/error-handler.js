@@ -1,6 +1,5 @@
 'use strict';
 
-var after = require('after');
 var test = require('tape');
 var http = require('http');
 var sendError = require('../error.js');
