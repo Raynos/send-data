@@ -18,7 +18,7 @@ function sendError(req, res, opts, callback) {
 
     var errOpts = {
         verbose: typeof verbose === 'boolean' ? verbose : true,
-        verboseFields: opts.verboseFields,
+        serializeStack: opts.serializeStack,
         bodyStatusCode: opts.bodyStatusCode,
         additionalParams: opts.additionalParams,
         err: err
@@ -67,16 +67,12 @@ function writeError(req, res, opts, callback) {
     }
 
     if (opts.verbose) {
-        var bFields = ['stack', 'expected', 'debug'];
-        var vFields = opts.verboseFields;
+        body.expected = err.expected;
+        body.debug = err.debug;
+    }
 
-        bFields.forEach(function eachField(field) {
-            if (vFields) {
-                body[field] = vFields[field] === null ? null : err[field];
-            } else {
-                body[field] = err[field];
-            }
-        });
+    if (opts.serializeStack) {
+        body.stack = err.stack;
     }
 
     // Append additional params

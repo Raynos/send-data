@@ -189,19 +189,17 @@ test('send an error with verbose', function t(assert) {
         assert.equal(resp.statusCode, 500);
         var b = resp.body;
         assert.equal(b.message, 'test');
-        assert.ok(b.stack);
+        assert.notok(b.stack);
 
         assert.end();
     });
 });
 
-test('send an error with verbose field overrides', function t(assert) {
-    var done = after(3, assert.end);
-
-    function requestFoo(fields, assertions) {
+test('serializes stack only when told to do so', function t(assert) {
+    function requestFoo(assertions) {
         var s = makeServer({
             verbose: true,
-            verboseFields: fields
+            serializeStack: true
         }, function onReq(req, res, o, cb) {
             var err = new Error('test');
             err.expected = 'expected';
@@ -215,37 +213,10 @@ test('send an error with verbose field overrides', function t(assert) {
         }, assertions);
     }
 
-    requestFoo({
-        stack: null,
-    }, function onFoo(err, resp) {
+    requestFoo(function onFoo(err, resp) {
         var b = resp.body;
-        assert.notok(b.stack);
-        assert.ok(b.debug);
-        assert.ok(b.expected);
-        done();
-    });
-
-    requestFoo({
-        stack: null,
-        debug: null
-    }, function onFoo(err, resp) {
-        var b = resp.body;
-        assert.notok(b.stack);
-        assert.notok(b.debug);
-        assert.ok(b.expected);
-        done();
-    });
-
-    requestFoo({
-        stack: null,
-        debug: null,
-        expected: null
-    }, function onFoo(err, resp) {
-        var b = resp.body;
-        assert.notok(b.stack);
-        assert.notok(b.debug);
-        assert.notok(b.expected);
-        done();
+        assert.ok(b.stack);
+        assert.end();
     });
 });
 
@@ -266,7 +237,7 @@ test('send an expected error with verbose', function t(assert) {
         assert.equal(resp.statusCode, 500);
         var b = resp.body;
         assert.equal(b.message, 'test');
-        assert.ok(b.stack);
+        assert.notok(b.stack);
 
         assert.end();
     });
