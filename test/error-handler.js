@@ -1,5 +1,6 @@
 'use strict';
 
+var after = require('after');
 var test = require('tape');
 var http = require('http');
 var sendError = require('../error.js');
@@ -191,6 +192,60 @@ test('send an error with verbose', function t(assert) {
         assert.ok(b.stack);
 
         assert.end();
+    });
+});
+
+test('send an error with verbose field overrides', function t(assert) {
+    var done = after(3, assert.end);
+
+    function requestFoo(fields, assertions) {
+        var s = makeServer({
+            verbose: true,
+            verboseFields: fields
+        }, function onReq(req, res, o, cb) {
+            var err = new Error('test');
+            err.expected = 'expected';
+            err.debug = 'debug';
+            cb(err);
+        });
+
+        hammockRequest(s, {
+            url: '/foo',
+            json: true
+        }, assertions);
+    }
+
+    requestFoo({
+        stack: null,
+    }, function onFoo(err, resp) {
+        var b = resp.body;
+        assert.notok(b.stack);
+        assert.ok(b.debug);
+        assert.ok(b.expected);
+        done();
+    });
+
+    requestFoo({
+        stack: null,
+        debug: null
+    }, function onFoo(err, resp) {
+        var b = resp.body;
+        assert.notok(b.stack);
+        assert.notok(b.debug);
+        assert.ok(b.expected);
+        done();
+    });
+
+    requestFoo({
+        stack: null,
+        debug: null,
+        expected: null
+    }, function onFoo(err, resp) {
+        var b = resp.body;
+        assert.notok(b.stack);
+        assert.notok(b.debug);
+        assert.notok(b.expected);
+        done();
     });
 });
 

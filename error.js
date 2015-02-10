@@ -18,6 +18,7 @@ function sendError(req, res, opts, callback) {
 
     var errOpts = {
         verbose: typeof verbose === 'boolean' ? verbose : true,
+        verboseFields: opts.verboseFields,
         bodyStatusCode: opts.bodyStatusCode,
         additionalParams: opts.additionalParams,
         err: err
@@ -66,9 +67,16 @@ function writeError(req, res, opts, callback) {
     }
 
     if (opts.verbose) {
-        body.stack = err.stack;
-        body.expected = err.expected;
-        body.debug = err.debug;
+        var bFields = ['stack', 'expected', 'debug'];
+        var vFields = opts.verboseFields;
+
+        bFields.forEach(function eachField(field) {
+            if (vFields) {
+                body[field] = vFields[field] === null ? null : err[field];
+            } else {
+                body[field] = err[field];
+            }
+        });
     }
 
     // Append additional params

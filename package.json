@@ -21,6 +21,7 @@
     "xtend": "^3.0.0"
   },
   "devDependencies": {
+    "after": "^0.8.1",
     "hammock": "^0.1.10",
     "hammock-request": "^2.1.0",
     "istanbul": "^0.3.5",
