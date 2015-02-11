@@ -188,8 +188,33 @@ test('send an error with verbose', function t(assert) {
         assert.equal(resp.statusCode, 500);
         var b = resp.body;
         assert.equal(b.message, 'test');
-        assert.ok(b.stack);
+        assert.notok(b.stack);
 
+        assert.end();
+    });
+});
+
+test('serializes stack only when told to do so', function t(assert) {
+    function requestFoo(assertions) {
+        var s = makeServer({
+            verbose: true,
+            serializeStack: true
+        }, function onReq(req, res, o, cb) {
+            var err = new Error('test');
+            err.expected = 'expected';
+            err.debug = 'debug';
+            cb(err);
+        });
+
+        hammockRequest(s, {
+            url: '/foo',
+            json: true
+        }, assertions);
+    }
+
+    requestFoo(function onFoo(err, resp) {
+        var b = resp.body;
+        assert.ok(b.stack);
         assert.end();
     });
 });
@@ -211,7 +236,7 @@ test('send an expected error with verbose', function t(assert) {
         assert.equal(resp.statusCode, 500);
         var b = resp.body;
         assert.equal(b.message, 'test');
-        assert.ok(b.stack);
+        assert.notok(b.stack);
 
         assert.end();
     });
