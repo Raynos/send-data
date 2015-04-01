@@ -26,8 +26,7 @@ function sendError(req, res, opts, callback) {
 
     var statsPrefix = opts.statsPrefix || 'clients.send-data';
     var parsedUrl = url.parse(req.url);
-    var statsdKey = statsPrefix + '.error-handler.' +
-        parsedUrl.pathname;
+    var statsdKey = statsPrefix + '.error-handler';
 
     var isExpected = err.expected ||
         (err.statusCode >= 400 && err.statusCode <= 499);
