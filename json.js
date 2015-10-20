@@ -1,30 +1,38 @@
-// var stringify = require("json-stringify-safe")
+'use strict';
 
-var send = require("./index")
-var isSendObject = require("./is-send-object")
+// var stringify = require('json-stringify-safe')
+
+var extend = require('xtend');
+
+var send = require('./index')
+var isSendObject = require('./is-send-object')
+
+var CONTENT_TYPE_HEADER = {
+    'content-type': 'application/json'
+}
 
 module.exports = sendJson
 
 function sendJson(req, res, opts, callback) {
     if (!isSendObject(opts)) {
         opts = { body: opts }
+    } else {
+        opts = extend(opts);
     }
 
-    opts = opts || {}
     if (opts.pretty) {
-        opts.space = "    "
+        opts.space = '    '
     }
 
     var tuple = safeStringify(opts.body,
-        opts.replacer || null, opts.space || "");
+        opts.replacer || null, opts.space || '');
 
     if (tuple[0]) {
         return callback(tuple[0]);
     }
 
-    opts.headers = opts.headers || {}
+    opts.headers = extend(opts.headers, CONTENT_TYPE_HEADER);
     opts.body = tuple[1];
-    opts.headers["Content-Type"] = "application/json"
 
     send(req, res, opts, callback)
 }

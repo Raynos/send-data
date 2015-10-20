@@ -1,7 +1,9 @@
-var Buffer = require("buffer").Buffer
-var zlib = require("zlib")
+'use strict';
 
-var CALLBACK_REQUIRED = "send(req, res, opts, callback). Callback is required"
+var Buffer = require('buffer').Buffer
+var zlib = require('zlib')
+
+var CALLBACK_REQUIRED = 'send(req, res, opts, callback). Callback is required'
 var isGzip = /\bgzip\b/
 
 module.exports = send
@@ -9,10 +11,10 @@ module.exports = send
 function send(req, res, opts, callback) {
     var headers = opts.headers || {}
     var statusCode = opts.statusCode || null
-    var body = typeof opts === "object" ? opts.body : opts
+    var body = typeof opts === 'object' ? opts.body : opts
     var gzip = opts.gzip || false
 
-    body = Buffer.isBuffer(body) ? body : new Buffer(body || "")
+    body = Buffer.isBuffer(body) ? body : new Buffer(body || '')
     headers = headers || {}
 
     res.statusCode = statusCode || res.statusCode
@@ -31,24 +33,24 @@ function send(req, res, opts, callback) {
                 return callback(err)
             }
 
-            res.once("finish", callback)
+            res.once('finish', callback)
 
-            res.setHeader("Content-Encoding", "gzip")
-            res.setHeader("Content-Length", body.length)
+            res.setHeader('content-encoding', 'gzip')
+            res.setHeader('content-length', body.length)
             res.end(body)
         })
     } else {
         if (callback) {
-            res.once("finish", callback)
+            res.once('finish', callback)
         }
 
-        res.setHeader("Content-Length", body.length)
+        res.setHeader('content-length', body.length)
         res.end(body)
     }
 }
 
 function acceptsGzip(req) {
-    var acceptEncoding = req.headers["accept-encoding"] || ""
+    var acceptEncoding = req.headers['accept-encoding'] || ''
 
     return !!acceptEncoding.match(isGzip)
 }
