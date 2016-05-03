@@ -20,7 +20,7 @@ function send(req, res, opts, callback) {
     res.statusCode = statusCode || res.statusCode
 
     Object.keys(headers).forEach(function (header) {
-        res.setHeader(header, headers[header])
+        setHeader(res, header, headers[header])
     })
 
     if (gzip && acceptsGzip(req)) {
@@ -35,8 +35,8 @@ function send(req, res, opts, callback) {
 
             res.once('finish', callback)
 
-            res.setHeader('content-encoding', 'gzip')
-            res.setHeader('content-length', body.length)
+            setHeader(res, 'content-encoding', 'gzip')
+            setHeader(res, 'content-length', body.length)
             res.end(body)
         })
     } else {
@@ -44,7 +44,7 @@ function send(req, res, opts, callback) {
             res.once('finish', callback)
         }
 
-        res.setHeader('content-length', body.length)
+        setHeader(res, 'content-length', body.length)
         res.end(body)
     }
 }
@@ -53,4 +53,9 @@ function acceptsGzip(req) {
     var acceptEncoding = req.headers['accept-encoding'] || ''
 
     return !!acceptEncoding.match(isGzip)
+}
+
+function setHeader (res) {
+    if (res.headersSent) return
+    res.setHeader.apply(res, [].slice.call(arguments, 1))
 }
